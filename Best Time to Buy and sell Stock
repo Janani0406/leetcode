@@ -1,0 +1,20 @@
+int maxProfit(int *prices, int pricesSize) {
+
+    if (pricesSize == 0) {
+        return 0; //base case
+    }
+
+    int a = prices[0], temp_pro = 0, final_profit = 0; //initialization
+    for (int i = 1; i < pricesSize; i++) { //loop to check prices for max. profit
+        if (prices[i] < a) {
+            a = prices[i]; //new min. price
+        } else {
+        
+            temp_pro = prices[i] - a;
+            if (temp_pro > final_profit) {
+                final_profit = temp_pro; //keeps updating the max. profit possible
+            }   
+        }   
+    }
+    return final_profit; //returns max. profit to the main
+}
