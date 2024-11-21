@@ -1,0 +1,3 @@
+//Dislaimer, I would NEVER EVER EVER write a single line of code like this because it's not reader friendly!
+//I decided to try it JUST for fun. I repeat, I would NEVER do this in the real world, it's just for fun!
+int maxDepth(struct TreeNode* root){ return !root ? 0 : (1 + fmax( maxDepth(root->left), maxDepth(root->right) ));}
