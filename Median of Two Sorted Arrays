@@ -1,0 +1,59 @@
+double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
+    // Reallocate nums1 to hold both arrays
+    nums1 = (int*)realloc(nums1, (nums1Size + nums2Size) * sizeof(int));
+    
+    int totalSize = nums1Size + nums2Size;
+    int middleIndex = totalSize / 2;
+    // Handle edge case where nums1 is initially empty
+    if(nums1Size==0)
+    {
+        if(totalSize%2 == 0)
+            return (nums2[middleIndex-1]+nums2[middleIndex])/2.0;
+        else
+            return nums2[middleIndex];
+    }
+
+    // Merge nums2 into nums1 from the back
+    int i = nums1Size - 1; // Last index of nums1 before merge
+    int j = nums2Size - 1; // Last index of nums2
+    int k = totalSize - 1; // Last index for merged nums1
+
+    while(i>=0 && j>=0)
+    {
+        if(nums1[i]>nums2[j])
+        {
+            nums1[k--]=nums1[i--];
+            nums1Size--;
+        }
+        else
+        {
+            nums1[k--]=nums2[j--];
+            nums2Size--;
+        }
+    }
+    // If there are remaining elements in nums2
+    while(j>=0)
+    {
+        nums1[k--]=nums2[j--];
+    }
+    /*
+    while (nums2Size > 0) 
+    {
+        if (nums1Size > 0 && nums1[nums1Size - 1] > nums2[nums2Size - 1]) 
+        {
+            nums1[nums1Size + nums2Size - 1] = nums1[nums1Size - 1];
+            nums1Size--;  // Move the pointer for nums1 to the left
+        } 
+        else 
+        {
+            nums1[nums1Size + nums2Size - 1] = nums2[nums2Size - 1];
+            nums2Size--;  // Move the pointer for nums2 to the left
+        }
+    }
+    */
+    // Calculate the median
+    if(totalSize%2 == 0)
+        return (nums1[middleIndex-1]+nums1[middleIndex])/2.0;
+    else
+        return nums1[middleIndex];
+}
