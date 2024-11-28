@@ -1,0 +1,32 @@
+int search(int* nums, int numsSize, int target) {
+    int midIndex = 0;
+    int first = 0;
+    int last = numsSize - 1;
+
+    if(numsSize < 2)
+    {
+       if(nums[first] == target)
+            return first;
+       else
+            return -1;
+    }
+
+    while(first<=last)
+    {
+        midIndex = (first + last) / 2;
+        if(nums[midIndex] == target)
+        {
+            return midIndex;
+        }
+        else if(nums[midIndex] > target)
+        {
+            last = midIndex-1;
+        }
+        else
+        {
+            first = midIndex +1;
+        }
+    }
+
+    return -1;
+}
