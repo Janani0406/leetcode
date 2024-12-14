@@ -1,0 +1,25 @@
+bool dfs(char** board, int boardSize, int* boardColSize, char* word, int i, int j, int wordIndex) {
+    if(word[wordIndex] == '\0') return true;
+    if(i<0 || i>= boardSize || j<0 || j>= *boardColSize || board[i][j] != word[wordIndex]) 
+        return false;
+    
+    char temp = board[i][j];
+    board[i][j] = '#';
+
+    bool found = dfs(board, boardSize, boardColSize, word, i+1, j, wordIndex+1) ||
+                 dfs(board, boardSize, boardColSize, word, i-1, j, wordIndex+1) ||
+                 dfs(board, boardSize, boardColSize, word, i, j+1, wordIndex+1) ||
+                 dfs(board, boardSize, boardColSize, word, i, j-1, wordIndex+1);
+    
+    board[i][j] = temp;
+    return found;
+}
+
+bool exist(char** board, int boardSize, int* boardColSize, char* word){
+    for(int i=0;i<boardSize;i++){
+        for(int j=0;j<*boardColSize;j++){
+            if(board[i][j] == word[0] && dfs(board, boardSize, boardColSize, word, i ,j, 0)) return true;
+        }
+    }
+    return false;
+}
