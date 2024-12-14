@@ -1,0 +1,28 @@
+int countSetSize(int setRep) {
+    int count = 0;
+    while (setRep > 0) {
+        if ((setRep & 1) == 1)
+            count++;
+        setRep >>= 1;
+    }
+    return count;
+}
+int** subsets(int* nums, int numsSize, int* returnSize,
+              int** returnColumnSizes) {
+    int totalSubsets = 1 << numsSize; // totalSubsets = 2^n;
+    *returnSize = totalSubsets;
+    int** subsets = (int**)malloc(sizeof(int*) * totalSubsets);
+    *returnColumnSizes = (int*)malloc(sizeof(int) * totalSubsets);
+    for (int i = 0; i < totalSubsets; i++) {
+        int setSize = countSetSize(i);
+        (*returnColumnSizes)[i] = setSize;
+        subsets[i] = (int*)malloc(sizeof(int) * setSize);
+        int pos = 0;
+        for (int j = 0; j < numsSize; j++) {
+            if (i & (1 << j)) {
+                subsets[i][pos++] = nums[j];
+            }
+        }
+    }
+    return subsets;
+}
