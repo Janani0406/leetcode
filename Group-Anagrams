@@ -1,0 +1,75 @@
+#define mapLength 100000007
+short int ansIndex[mapLength];
+short int subLength[mapLength];
+
+int charCmp(const void *c1, void *c2)
+{
+  return (*(char *)c1 - *(char *)c2);
+}
+
+int getHashValue(char *str)
+{
+  int len = strlen(str);
+  long int hash = len;
+  char *temp = (char *)malloc(len + 1);
+  bzero(temp, len + 1);
+  strcpy(temp, str);
+  qsort(temp, len, 1, charCmp);
+
+  for (int i = 0; i <= len; i++)
+  {
+    if (!temp[i])
+      continue;
+    hash = (hash * 26 + (temp[i] - 'a' + 1)) % mapLength;
+  }
+  return hash;
+}
+
+char ***groupAnagrams(char **strs, int strsSize, int *returnSize, int **returnColumnSizes)
+{
+  bzero(ansIndex, sizeof(short int) * mapLength);
+  bzero(subLength, sizeof(short int) * mapLength);
+  int ansLength = 0;
+  int ansHash[10000] = {0};
+  for (int i = 0; i < strsSize; i++)
+  {
+    int index = getHashValue(strs[i]);
+    if (ansIndex[index])
+    {
+      subLength[index]++;
+    }
+    else
+    {
+      ansHash[ansLength++] = index;
+      ansIndex[index] = ansLength;
+      subLength[index] = 1;
+    }
+  }
+
+  *returnSize = ansLength;
+  (*returnColumnSizes) = (int *)malloc(sizeof(int) * ansLength);
+  char ***ans = (char ***)malloc(sizeof(char **) * ansLength);
+  bzero(ans, sizeof(char **) * ansLength);
+
+  for (int i = 0; i < ansLength; i++)
+  {
+    int len = subLength[ansHash[i]];
+    (*returnColumnSizes)[i] = len;
+    ans[i] = (char **)malloc(sizeof(char *) * len);
+    bzero(ans[i], sizeof(char *) * len);
+  }
+  for (int i = 0; i < strsSize; i++)
+  {
+    int hash = getHashValue(strs[i]);
+    int index = ansIndex[hash] - 1;
+    int subIndex = (--subLength[hash]);
+
+    int strLength = strlen(strs[i]) + 1;
+    ans[index][subIndex] = (char *)malloc(strLength);
+    bzero(ans[index][subIndex], strLength);
+
+    strcpy(ans[index][subIndex], strs[i]);
+  }
+
+  return ans;
+}
