@@ -1,0 +1,33 @@
+bool isNumber(char* s) {
+    int dots = 0, exp = 0;
+    bool hasDigit = false; // To ensure there is at least one digit
+    
+    if (*s == '+' || *s == '-') {
+        s++;
+    }
+
+    while (*s != '\0') {
+        if (*s >= '0' && *s <= '9') {
+            hasDigit = true;
+        } else if (*s == '.') {
+            if (dots > 0 || exp > 0) {
+                return false;
+            }
+            dots++;
+        } else if (*s == 'e' || *s == 'E') {
+            if (exp > 0 || !hasDigit) {
+                return false;
+            }
+            exp++;
+            hasDigit = false; // Reset hasDigit to ensure there's a digit after 'e' or 'E'
+            if (*(s + 1) == '+' || *(s + 1) == '-') {
+                s++;
+            }
+        } else {
+            return false;
+        }
+        s++;
+    }
+    
+    return hasDigit;
+}
