@@ -1,0 +1,59 @@
+/**
+ * Return an array of arrays of size *returnSize.
+ * The sizes of the arrays are returned as *returnColumnSizes array.
+ * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
+ */
+int compare(const void* a, const void* b){
+    return (*(int*)a-*(int*)b);
+}
+
+void helper(int* candidates, int candidatesSize, int currentindex, 
+int* state, int statesize, int target, int* returnSize, 
+int** returnColumnSizes, int** result){
+
+    if(target==0){
+        result[*returnSize]=(int*)calloc(statesize, sizeof(int));
+        memcpy(result[*returnSize], state, statesize*sizeof(int));
+        /*for(int i=0; i<statesize; i++){
+            result[*returnSize][i]=state[i];
+        }*/
+        (*returnColumnSizes)[(*returnSize)++]=statesize;
+        return;
+    }
+
+    for(int i=currentindex; i<candidatesSize; i++){
+
+        int j = candidates[i];
+
+        if(target-j<0) break;
+
+        state[statesize] = j;
+        statesize++;
+
+        helper(candidates, candidatesSize, i, state, 
+        statesize, target-j, returnSize, returnColumnSizes, result);
+
+        statesize--;
+        
+    }
+    return;
+}
+
+
+int** combinationSum(int* candidates, int candidatesSize, int target, int* returnSize, int** returnColumnSizes) {
+    
+    qsort(candidates, candidatesSize, sizeof(int), compare);
+
+    int** result = (int**)calloc(150, sizeof(int*));
+    (*returnColumnSizes) = (int*)calloc(150, sizeof(int));
+    *returnSize=0;
+
+    int* state = (int*)calloc(20, sizeof(int));
+    int statesize=0;
+    
+    int currentindex = 0;
+
+    helper(candidates, candidatesSize, currentindex, state, statesize, target, returnSize, returnColumnSizes, result);
+
+    return result;
+}
