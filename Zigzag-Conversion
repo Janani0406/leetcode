@@ -1,0 +1,38 @@
+char* convert(char* s, int numRows) {
+    // 第一例每次移動 = (row-1) * 2
+    // 後續列逐次遞減
+    if (numRows == 1) return strdup(s);
+    int len = strlen(s);
+    // printf("%d" ,len);
+    int j = 0;
+    int move = (numRows-1) * 2;
+    int total = move;
+    char* res = (char*)calloc(len + 1, sizeof(char));
+
+    // printf("%d\n", total);
+    //每列
+    for(int row = 1; row <= numRows; row++){
+        move = total - ((row-1)*2);
+        if(move == 0) move = total;
+        // printf("-------- %d\n",row);
+        // printf("t = %d\n", total);
+        // printf("m = %d\n", move);
+        for(int idx = row-1; idx < len;){
+            res[j] = s[idx];
+            // printf(" %d\n",idx);
+            
+            // Z的第一列
+            if(idx < numRows) idx = idx + move;
+            // 首列跟尾列
+            else if(move == total) idx = idx + move;
+            // 中間
+            else{
+                move = total - move;
+                idx = idx + move;
+            }
+            j++;
+        }
+    }
+    // res[j] = '\0';
+    return res;
+}
