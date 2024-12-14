@@ -1,0 +1,19 @@
+void sortColors(int* nums, int numsSize) {
+    int i,t,k=0;
+    for(i=0;i<numsSize;i++){
+        if(nums[i]==0){
+            t=nums[i];
+            nums[i]=nums[k];
+            nums[k]=t;
+            k++;
+        }
+    }
+    for(i=0;i<numsSize;i++){
+        if(nums[i]==1){
+            t=nums[i];
+            nums[i]=nums[k];
+            nums[k]=t;
+            k++;
+        }
+    }
+}
