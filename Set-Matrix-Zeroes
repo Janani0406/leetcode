@@ -1,0 +1,64 @@
+void printMatrix(int **matrix, int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void setRowColZeroes(int **matrix, int row, int col, int nRows, int nCols) {
+    if (row == -1) {
+        for (int i = 0; i < nRows; i++) {
+            matrix[i][col] = 0;
+        }
+    } else {
+        for (int i = 0; i < nCols; i++) {
+            matrix[row][i] = 0;
+        }
+    }
+}
+
+void setZeroes(int** matrix, int matrixSize, int* matrixColSize) {
+    // for [0][0] we need to know if it was set from the first row or the first column
+    bool fromRow = false;
+    bool fromCol = false;
+
+    for (int i = 0; i < matrixSize; i++) {
+        for (int j = 0; j < matrixColSize[i]; j++) {
+            if (matrix[i][j] == 0) {
+                if (i == 0) {
+                    fromRow = true;
+                }
+                if (j == 0) {
+                    fromCol = true;
+                }
+                // if we find a zero in any cell, that we can set the first element in that row/col to be 0
+                matrix[0][j] = 0;
+                matrix[i][0] = 0;
+            }
+        }
+    }
+
+    for (int k = 1; k < matrixSize; k++) {
+        if (!matrix[k][0]) {
+            setRowColZeroes(matrix, k, -1, matrixSize, matrixColSize[k]);
+        }
+    }
+
+    for (int k = 1; k < matrixColSize[0]; k++) {
+        if (!matrix[0][k]) {
+            setRowColZeroes(matrix, -1, k, matrixSize, matrixColSize[k]);
+        } 
+    }
+
+    if (fromRow && fromCol) {
+        setRowColZeroes(matrix, -1, 0, matrixSize, matrixColSize[0]);
+        setRowColZeroes(matrix, 0, -1, matrixSize, matrixColSize[0]);
+    } else if (fromRow) {
+        setRowColZeroes(matrix, 0, -1, matrixSize, matrixColSize[0]);
+    } else if (fromCol) {
+        setRowColZeroes(matrix, -1, 0, matrixSize, matrixColSize[0]);
+    }
+}
