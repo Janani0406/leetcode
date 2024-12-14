@@ -1,0 +1,49 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+struct ListNode* deleteDuplicates(struct ListNode* head) {
+    if(head == NULL || head->next == NULL) return head;
+    int previous = INT_MIN;
+    struct ListNode* tour = head;
+    struct ListNode *tail = NULL;
+    int idx = 1;
+
+    while(tour != NULL){
+        // 當前是唯一
+        if(previous != tour->val){
+            previous = tour->val;
+            if(idx == 1){
+                if(tour->next == NULL){
+                    head = tour;
+                    tail = head;
+                    idx += 1;
+                    // printf("ccc\n");
+                }
+                else if(previous != tour->next->val){
+                    head = tour;
+                    tail = head;
+                    idx += 1;
+                    // printf("bbb\n");
+                }
+            }else{
+                if(tour->next == NULL){
+                    head->next = tour;
+                    head = head->next;
+                }
+                else if(previous != tour->next->val){
+                    head->next = tour;
+                    head = head->next;
+                }
+            }
+        }
+        tour = tour->next;
+        // printf("aaaa\n");
+    }
+    head->next = NULL;
+    // head = tail;
+    return tail;
+}
