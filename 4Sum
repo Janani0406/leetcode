@@ -1,0 +1,48 @@
+int compare(const void *a, const void *b) { return *(int*)a - *(int*)b; }
+
+int** fourSum(int* nums, int numsSize, int target, int* returnSize, int** returnColumnSizes) {
+
+    if (numsSize<4) { *returnSize=0; return NULL; }
+    qsort(nums,numsSize,sizeof(int),&compare);
+    
+    if (target > (long long)nums[numsSize-1]+\
+                 (long long)nums[numsSize-2]+\
+                 (long long)nums[numsSize-3]+\
+                 (long long)nums[numsSize-4]) { *returnSize=0; return NULL; }
+    if (target < (long long)nums[0]+\
+                 (long long)nums[1]+\
+                 (long long)nums[2]+\
+                 (long long)nums[3]) { *returnSize=0; return NULL; }
+
+    int a,b,c,d,size=0,capacity=2,**result=(int**)malloc(sizeof(int*)*capacity);
+    while (1000000000 < (long long)nums[numsSize-1]+\
+                        (long long)nums[numsSize-2]+\
+                        (long long)nums[numsSize-3]+\
+                        (long long)nums[numsSize-4] && 4 < numsSize) numsSize--;
+    while (-1000000000 > (long long)nums[0]+\
+                         (long long)nums[1]+\
+                         (long long)nums[2]+\
+                         (long long)nums[3] && 4 < numsSize) { nums++; numsSize--; }
+    a=0,d=numsSize-1;
+    while (a+2<d) {
+        while ((a+2<d)&&(nums[a]+nums[a+1]+nums[a+2]+nums[d]>target)) d--;
+        while ((a+2<d)&&(nums[a]+nums[d-2]+nums[d-1]+nums[d]>=target)) {
+            b=a+1; c=d-1;
+            while (b<c) {
+                int sum=nums[a]+nums[b]+nums[c]+nums[d];
+                if (sum<target) b++; else
+                if (sum>target) c--; else {
+                    if (size>=capacity) result=(int**)realloc(result,sizeof(int*)*(capacity*=2));
+                    int temp[4]={nums[a],nums[b],nums[c],nums[d]};
+                    result[size++]=(int*)memcpy(malloc(sizeof(int)*4),temp,sizeof(int)*4);
+                    for (b++;(b<c)&&!(nums[b]-nums[b-1]);b++);
+                    for (c--;(b<c)&&!(nums[c]-nums[c+1]);c--);
+                }
+            } for (d--;(a+2<d)&&!(nums[d]-nums[d+1]);d--);
+        } d=numsSize-1; for (a++;(a+2<d)&&!(nums[a]-nums[a-1]);a++);
+    }
+
+    /*if (!size) { free(result); *returnSize=0; return NULL; }*/ *returnSize=size;
+    for (*returnColumnSizes=(int*)malloc(sizeof(int)*size);size;(*returnColumnSizes)[--size]=4);
+    return result;
+}
