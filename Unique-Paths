@@ -1,0 +1,20 @@
+long long int fact(int n){
+    long long int ans=1;
+    for(int i=1;i<=n;i++){
+        ans=ans*i;
+    }
+    return ans;
+}
+int uniquePaths(int m, int n) {
+    long int ans=1,t=0;
+    int small=fmin(m,n);
+    int till=fmax(m+n-small-1,small-1);
+    for(int i=m+n-2;i>till;i--){
+        ans=ans*i;
+        if(ans%fact(m+n-2-till)==0&&t==0){
+            ans=ans/fact(m+n-2-till);
+            t=1;
+        }
+    }
+    return ans;
+}
