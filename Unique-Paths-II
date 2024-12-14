@@ -1,0 +1,58 @@
+int count;
+int** dp;
+// solve() - works w/o DP 
+void solve(int** obstacleGrid, int rMax, int cMax, int i, int j) {
+    if (i >= rMax || j >= cMax) {
+        return;
+    }
+    if (i == rMax - 1 && j == cMax - 1 && obstacleGrid[i][j] == 0) {
+        if (obstacleGrid[i][j] == 0) {
+            count++;
+            return;
+        }
+        return;
+    }
+    if (obstacleGrid[i][j] == 0) {
+        solve(obstacleGrid, rMax, cMax, i + 1, j);
+        solve(obstacleGrid, rMax, cMax, i, j + 1);
+    }
+
+}
+// solvedp() - works w/ DP
+int solvedp(int** obstacleGrid, int rMax, int cMax, int i, int j) {
+    if (i >= rMax || j >= cMax) {
+        return 0;
+    }
+
+    if (i == rMax - 1 && j == cMax - 1 && obstacleGrid[i][j] == 0) {
+        if (obstacleGrid[i][j] == 0) {
+            dp[i][j] = 1;    
+            count++;
+            return dp[i][j];
+        }
+        dp[i][j] = 0;
+        return dp[i][j];
+    }
+    if (dp[i][j] == -1) {
+        dp[i][j] = 0;
+        if (obstacleGrid[i][j] == 0) {
+            dp[i][j] = solvedp(obstacleGrid, rMax, cMax, i + 1, j);
+            dp[i][j] += solvedp(obstacleGrid, rMax, cMax, i, j + 1);
+        }
+    }
+    return dp[i][j];
+}
+
+int uniquePathsWithObstacles(int** obstacleGrid, int obstacleGridSize,
+                             int* obstacleGridColSize) {
+    dp = (int**)calloc(obstacleGridSize, sizeof(int*));
+    for (int i = 0; i < obstacleGridSize; i++) {
+        dp[i] = calloc(obstacleGridColSize[0], sizeof(int));
+        for (int j = 0; j < obstacleGridColSize[0]; j++) {
+            dp[i][j] = -1;
+        }
+    }
+    count = 0;
+    solvedp(obstacleGrid, obstacleGridSize, obstacleGridColSize[0], 0, 0);
+    return dp[0][0];
+}
